@@ -18,8 +18,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final List<EmployeesModel> _employees = <EmployeesModel>[];
   List<EmployeesModel> _employeesDisplay = <EmployeesModel>[];
-
+  int selectedAgeGroup = 0;
   bool _isLoading = true;
+
+  List<EmployeesModel> get filteredEmployees {
+    if (selectedAgeGroup == 0) {
+      return _employeesDisplay;
+    } else {
+      final int lowerBound = selectedAgeGroup;
+      final int upperBound = selectedAgeGroup + 9;
+      return _employeesDisplay
+          .where((employee) =>
+              employee.employee_age! >= lowerBound &&
+              employee.employee_age! <= upperBound)
+          .toList();
+    }
+  }
 
   @override
   void initState() {
@@ -29,7 +43,6 @@ class _HomePageState extends State<HomePage> {
         _isLoading = false;
         _employees.addAll(value);
         _employeesDisplay = _employees;
-        // print(_usersDisplay.length);
       });
     });
   }
@@ -47,6 +60,17 @@ class _HomePageState extends State<HomePage> {
               return index == 0
                   ? MySearch(
                       hintText: 'ex: name, age or salary.',
+                      value: selectedAgeGroup,
+                      selectedAgeGroup: (ageGroup) {
+                        setState(() {
+                          selectedAgeGroup = ageGroup!;
+
+                          _employeesDisplay = _employees.where((u) {
+                            return u.employee_age! >= selectedAgeGroup &&
+                                u.employee_age! <= selectedAgeGroup + 10;
+                          }).toList();
+                        });
+                      },
                       onChanged: (searchText) {
                         searchText = searchText.toLowerCase();
                         setState(() {
