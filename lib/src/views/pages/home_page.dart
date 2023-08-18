@@ -64,11 +64,14 @@ class _HomePageState extends State<HomePage> {
                       selectedAgeGroup: (ageGroup) {
                         setState(() {
                           selectedAgeGroup = ageGroup!;
-
-                          _employeesDisplay = _employees.where((u) {
-                            return u.employee_age! >= selectedAgeGroup &&
-                                u.employee_age! <= selectedAgeGroup + 10;
-                          }).toList();
+                          if (selectedAgeGroup == 0) {
+                            _employeesDisplay = _employees.toList();
+                          } else {
+                            _employeesDisplay = _employees.where((u) {
+                              return u.employee_age! >= selectedAgeGroup &&
+                                  u.employee_age! <= selectedAgeGroup + 10;
+                            }).toList();
+                          }
                         });
                       },
                       onChanged: (searchText) {
